@@ -9,7 +9,7 @@ using Combinatorics, Plots, Graphs, GraphRecipes
 
 # ╔═╡ f5cab10a-23b2-11ed-0b96-8fc0acb2704b
 md"""
-# Phylogenetic trees
+# Phylogenetic Trees
 """
 
 # ╔═╡ fab623cf-b40d-48bf-90c2-4d76554b0420
@@ -193,7 +193,7 @@ We can test if a matrix has a perfect phylogeny with the following two functions
 
 # ╔═╡ 5806317c-f81a-4220-aa9c-ad8e39091b05
 begin
-	test_set_for_perfect_phylogeny = Set([(0,1), (1,0), (1, 1)])
+	test_set_for_perfect_phylogeny = Set([(0,1), (1,0), (1,1)])
 	"""
 	Tests if two columns are compatible. That is they do not contain simultanously the
 	pairs 01, 10, 11
@@ -429,6 +429,7 @@ function contruct_phylogenetic_tree(m::AbstractMatrix{Bool,})
 	inserted_node = 1 # nodes are integers
 	node2label = [root] # we save the node and its label
 	label2node = Dict(root => inserted_node)
+	edge2label = Dict()
 	
 	# Iterate over the rows/taxa of m
 	for row in 1:size(m, 1)
@@ -472,6 +473,7 @@ function contruct_phylogenetic_tree(m::AbstractMatrix{Bool,})
 			# is guaranteed to not induce any cycle
 			# => The new graph is as well a tree
 			add_edge!(phylogenetic_tree, label2node[org], label2node[dest])
+			edge2label[(label2node[org], label2node[dest])] = col
 
 			# update org
 			org = dest
@@ -487,7 +489,7 @@ function contruct_phylogenetic_tree(m::AbstractMatrix{Bool,})
 		# this guarantees that this leaf will remain a leaf in each iteration
 		add_edge!(phylogenetic_tree, label2node[org], inserted_node)
 	end
-	phylogenetic_tree, node2label, label2node
+	phylogenetic_tree, node2label, label2node, edge2label
 end
 
 # ╔═╡ 1a94bcac-c1d5-4aee-a970-a220a78d3635
@@ -516,9 +518,26 @@ end
 
 # ╔═╡ b8bbcb17-cdda-4464-bbdd-4e477b594272
 begin
-	phylogenetic_tree_1, labels_1, nodes_1 = contruct_phylogenetic_tree(example4contruct_phylogenetic_tree)
+	phylogenetic_tree_1, labels_1, nodes_1, edge_labels_1 = contruct_phylogenetic_tree(example4contruct_phylogenetic_tree)
 
-	plot(phylogenetic_tree_1, names=labels2string(labels_1), curves=false)
+	plot(phylogenetic_tree_1, names=labels2string(labels_1), curves=false, edgelabel=edge_labels_1)
+end
+
+# ╔═╡ e3dbe35c-2fd5-4937-b3a2-ade39fd02db3
+begin
+	example4contruct_phylogenetic_tree_2 = sort_binary_matrix(Array{Bool,}([0 0 1 0; 0 1 1 0; 1 0 0 1; 1 0 0 0]))
+
+	@assert( has_phylogentic_tree(example4contruct_phylogenetic_tree_2) )
+	@assert( has_no_duplicate_columns(example4contruct_phylogenetic_tree_2) )
+	@assert( has_no_duplicate_rows(example4contruct_phylogenetic_tree_2) )
+	example4contruct_phylogenetic_tree_2
+end
+
+# ╔═╡ df59f942-37dc-4440-a311-75eaf9a79022
+begin
+	phylogenetic_tree_2, labels_2, nodes_2, edge_labels_2 = contruct_phylogenetic_tree(example4contruct_phylogenetic_tree_2)
+
+	plot(phylogenetic_tree_2, names=labels2string(labels_2), curves=false, edgelabel=edge_labels_2)
 end
 
 # ╔═╡ ac9ba96a-d5aa-463c-af9b-9c70d35b6bf0
@@ -1588,10 +1607,12 @@ version = "1.4.1+0"
 # ╟─95bbc5b0-9f29-4128-874c-57bb97fb2288
 # ╟─865fd300-b2dd-4858-a3ae-f39506a5233d
 # ╟─666eb7bc-25a4-4c37-81d6-b4b80385aa17
-# ╠═27fbffe2-5e97-4762-9588-12b751a311b1
+# ╟─27fbffe2-5e97-4762-9588-12b751a311b1
 # ╟─1a94bcac-c1d5-4aee-a970-a220a78d3635
-# ╠═02d97d4c-2a07-4993-ac7d-2136ec22fa25
-# ╠═b8bbcb17-cdda-4464-bbdd-4e477b594272
+# ╟─02d97d4c-2a07-4993-ac7d-2136ec22fa25
+# ╟─b8bbcb17-cdda-4464-bbdd-4e477b594272
+# ╟─e3dbe35c-2fd5-4937-b3a2-ade39fd02db3
+# ╟─df59f942-37dc-4440-a311-75eaf9a79022
 # ╟─ac9ba96a-d5aa-463c-af9b-9c70d35b6bf0
 # ╟─e27e9c6d-4b8e-4562-92f7-08c2f8d8861f
 # ╟─00000000-0000-0000-0000-000000000001
