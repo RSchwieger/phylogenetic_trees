@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.17.5
 
 using Markdown
 using InteractiveUtils
@@ -11,6 +11,16 @@ using Combinatorics, Plots, Graphs, GraphRecipes
 md"""
 # Phylogenetic trees
 """
+
+# ╔═╡ fab623cf-b40d-48bf-90c2-4d76554b0420
+begin
+	#uncomment to install
+	#import Pkg
+	#Pkg.add("Combinatorics")
+	#Pkg.add("Plots")
+	#Pkg.add("Graphs")
+	#Pkg.add("GraphRecipes")
+end
 
 # ╔═╡ 6fa9071a-4b5b-45ce-bba1-d9249dc58587
 md"""
@@ -87,18 +97,19 @@ Array{Bool,}([1 0 0; 1 1 0; 1 1 1])
 
 # ╔═╡ eef9bc48-e205-4c6d-ab89-bbdb31954b32
 begin
-	g = DiGraph(6)
+	g = DiGraph(7)
 	add_edge!(g, 1, 2)
 	add_edge!(g, 2, 3)
+	add_edge!(g, 3, 7)
 	add_edge!(g, 2, 4)
 	add_edge!(g, 3, 5)
 	add_edge!(g, 5, 6)
-	plot(g, names=["000", "100", "110", "100", "111", "111"], curves=false, edgelabel=Dict((1,2) => "1", (2,3) => "2", (3,5) => "3"))
+	plot(g, names=["000", "100", "110", "100", "111", "111", "110"], curves=false, edgelabel=Dict((1,2) => "1", (2,3) => "2", (3,5) => "3"))
 end
 
 # ╔═╡ e0bf952c-76f8-4088-9fb5-36001c57ebb2
 md"""
-For simplicity, we make also the assumtion that no rows and columns are identical.
+For simplicity, we make also the assumption that no rows and columns are identical.
 
 We can test this with the following function.
 """
@@ -264,7 +275,6 @@ end
 # ╔═╡ 457deb47-d57c-489d-8a47-360ce65bfcb3
 md"""
 ## Construction of a Phylogenetic Tree
-**The shared-prefix property (p.62)**: For two taxa $f$ and $g$ let $d$ be the largest index character (rightmost in $\overline{M}$ that taxa $f$ and $g$ both possess (i.e. where both have state $1$). Then, assuming no pair of columns contain all three binary pairs $01$, $10$, $11$ rows $f$ and $g$ in $\overline(M)$ must be indentical from column one (at the left end of $\overline{M}$) to column $d$.)
 """
 
 # ╔═╡ 7ec6bd75-f906-40d5-b71d-86730cff8ed9
@@ -333,6 +343,14 @@ Its sorted version:
 # ╔═╡ d1d5a24e-aaf3-42d7-be06-62d1de791a04
 sort_binary_matrix(example_unsorted_matrix)
 
+# ╔═╡ 85bbd942-c696-4481-9a99-dd6ebf3705a7
+example4shared_prefix_property = Array{Bool,}([1 1 1 0; 1 1 1 1; 1 1 0 0; 1 0 0 0])
+
+# ╔═╡ 95bbc5b0-9f29-4128-874c-57bb97fb2288
+md"""
+**The shared-prefix property (p.62)**: For two taxa $f$ and $g$ let $d$ be the largest index character (rightmost in $\overline{M}$ that taxa $f$ and $g$ both possess (i.e. where both have state $1$). Then, assuming no pair of columns contain all three binary pairs $01$, $10$, $11$ rows $f$ and $g$ in $\overline M$ must be indentical from column one (at the left end of $\overline{M}$) to column $d$.)
+"""
+
 # ╔═╡ 865fd300-b2dd-4858-a3ae-f39506a5233d
 md"""
 **Algorithm (p. 43)**
@@ -391,8 +409,8 @@ to exactly one labeled edge.
 **Example:**
 
 ```
-unsorted_m = Array{Bool,}([0 1 1 0; 1 1 1 1; 0 0 0 1; 0 0 0 1])
-contruct_phylogenetic_tree(unsorted_m)
+m = Array{Bool,}([0 1 1 0; 1 1 1 1; 0 0 0 1; 0 0 0 1])
+contruct_phylogenetic_tree(m)
 ```
 
 """
@@ -992,9 +1010,9 @@ uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
 
 [[MbedTLS]]
 deps = ["Dates", "MbedTLS_jll", "MozillaCACerts_jll", "Random", "Sockets"]
-git-tree-sha1 = "d9ab10da9de748859a7780338e1d6566993d1f25"
+git-tree-sha1 = "2f0be365951a88dfb084f754005177e6dfb00ed0"
 uuid = "739be429-bea8-5141-9913-cc70e7f3736d"
-version = "1.1.3"
+version = "1.1.4"
 
 [[MbedTLS_jll]]
 deps = ["Artifacts", "Libdl"]
@@ -1078,9 +1096,9 @@ version = "8.44.0+0"
 
 [[Parsers]]
 deps = ["Dates"]
-git-tree-sha1 = "0044b23da09b5608b4ecacb4e5e6c6332f833a7e"
+git-tree-sha1 = "3d5bf43e3e8b412656404ed9466f1dcbf7c50269"
 uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
-version = "2.3.2"
+version = "2.4.0"
 
 [[Pixman_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1521,7 +1539,8 @@ version = "1.4.1+0"
 
 # ╔═╡ Cell order:
 # ╟─f5cab10a-23b2-11ed-0b96-8fc0acb2704b
-# ╠═44972213-3979-4392-a208-173a35dea09d
+# ╟─fab623cf-b40d-48bf-90c2-4d76554b0420
+# ╟─44972213-3979-4392-a208-173a35dea09d
 # ╟─6fa9071a-4b5b-45ce-bba1-d9249dc58587
 # ╟─a4593138-3f6f-4a99-8ea0-1df66434e9c7
 # ╟─2a62ea17-f928-4357-9e96-03be3952b56b
@@ -1565,11 +1584,13 @@ version = "1.4.1+0"
 # ╟─f3ba36c3-c9e6-4c0d-aace-12f825d2e843
 # ╟─bb123979-63f9-43a1-9b92-ea1db15be535
 # ╠═d1d5a24e-aaf3-42d7-be06-62d1de791a04
+# ╠═85bbd942-c696-4481-9a99-dd6ebf3705a7
+# ╟─95bbc5b0-9f29-4128-874c-57bb97fb2288
 # ╟─865fd300-b2dd-4858-a3ae-f39506a5233d
 # ╟─666eb7bc-25a4-4c37-81d6-b4b80385aa17
 # ╠═27fbffe2-5e97-4762-9588-12b751a311b1
 # ╟─1a94bcac-c1d5-4aee-a970-a220a78d3635
-# ╟─02d97d4c-2a07-4993-ac7d-2136ec22fa25
+# ╠═02d97d4c-2a07-4993-ac7d-2136ec22fa25
 # ╠═b8bbcb17-cdda-4464-bbdd-4e477b594272
 # ╟─ac9ba96a-d5aa-463c-af9b-9c70d35b6bf0
 # ╟─e27e9c6d-4b8e-4562-92f7-08c2f8d8861f
